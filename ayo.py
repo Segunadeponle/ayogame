@@ -1,4 +1,16 @@
 
+"""
+adeponle segun			120407005
+ekwuribe chisom			110407019
+ibekwe chidera			120407022
+oturugbu kenneth		120407045
+richard-chukkas prowess		120407049
+onwuchekwa oscar kalu		130407038
+efe yvonne ojiri		120407036
+emehin oluwatobi isreal		120407017
+
+"""
+import random
 
 class AyoGame:
 
@@ -6,10 +18,11 @@ class AyoGame:
         self.initialise()
         
     def initialise(self):
-        self.board = [4 for i in range(12)]
+        self.board = [4]*12#[4 for i in range(12)]
         self.first_player = True
         self.player1 = 0
         self.player2 = 0
+        self.invalid = False
         
 
     def display(self):
@@ -34,17 +47,37 @@ class AyoGame:
         print()
 
     def choose(self):
+        self.invalid = False
         if self.first_player:
             print("Player 1 enter a number between 1 and 6 inclusive")
             
         else:
-            print("Player 2 enter a number between 7 and 12 inclusive")    
-        pos = int(input("Please enter the number of the location you want to play: "))-1
+            print("Player 2 enter a number between 7 and 12 inclusive")
+        try:
+           pos = int(input("Please enter the number of the location you want to play: "))-1
+           
+        except ValueError:
+            self.invalid = True
+            return
+        
         if not self.first_player and 0<=pos<=5:
-            raise "invalid entry"
+            self.invalid = True
         elif self.first_player and 6<=pos<=11:
-            raise "invalid entry"
+            self.invalid = True
         self.last_hole = pos
+
+    def choose_random(self):
+        if self.first_player:
+            self.last_hole = random.randrange(0,6)
+            while self.board[self.last_hole] ==0:
+                self.last_hole = random.randrange(0,6)
+            print("Player 1 choose ",self.last_hole)
+            
+        else:
+            self.last_hole = random.randrange(6,12)
+            while self.board[self.last_hole] ==0:
+                self.last_hole = random.randrange(6,12)
+            print("Player 2 choose ",self.last_hole)
 
             
        
@@ -87,16 +120,77 @@ class AyoGame:
         return self.board[self.last_hole]!=1
     def next_player(self):
         self.first_player = not self.first_player
+
+    def goal_state(self):
+        if self.player1>24 or self.player2>24:
+            if self.player1>24:
+                return 1
+            else:
+                return 2
+
+        elif sum(self.board[0:6])==0 or sum(self.board[6:12])==0 :
+            if self.player1>self.player2:
+                return 1
+            else:
+                return 2   
+
+        elif abs(self.player1 - self.player2) >sum(self.board):
+            if self.player1>self.player2:
+                return 1
+            else:
+                return 2  
+        elif sum(self.board) < 3:
+            if self.player1>self.player2:
+                return 1
+            else:
+                return 2  
+        else:
+            return 0
+    def goal_state_new(self):
+        if self.player1>24 or self.player2>24:
+            if self.player1>24:
+                return (1,"if self.player1>24 or self.player2>24:")
+            else:
+                return (2,"if self.player1>24 or self.player2>24:")
+
+        elif sum(self.board[0:6])==0 or sum(self.board[6:12])==0 :
+            if self.player1>self.player2:
+                return (1," elif sum(self.board[0:6])==0 or sum(self.board[6:12])==0 :")
+            else:
+                return (2," elif sum(self.board[0:6])==0 or sum(self.board[6:12])==0 :")   
+
+        elif abs(self.player1 - self.player2) >sum(self.board):
+            if self.player1>self.player2:
+                return (1,"elif abs(self.player1 - self.player2) >sum(self.board):")
+            else:
+                return (2,"elif abs(self.player1 - self.player2) >sum(self.board):")  
+        elif sum(self.board) < 3:
+            if self.player1>self.player2:
+                return (1,"elif sum(self.board) < 3:")
+            else:
+                return (2,"elif sum(self.board) < 3:")  
+        else:
+            return (0,)
+            
+        
 def main():
     ayo = AyoGame()
     ayo.display()
     while True:
-        ayo.choose()
+        ayo.choose_random()
+        if ayo.invalid:
+            print("That is an invalid input.")
+            print()
+            continue
         if ayo.is_chosen_hole_empty():
             continue
         ayo.move()    
         ayo.gain()
         ayo.display()
+        if ayo.goal_state():
+            print("Player ", ayo.goal_state()," Wins")
+            break
+        
         ayo.next_player()
 if __name__ =='__main__':
     main()
