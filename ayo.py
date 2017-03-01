@@ -28,7 +28,7 @@ class AyoGame:
         for i in range(12, 6, -1):
             print(i, end="\t")
         print()
-        for i in range(11, 5, -1):
+        for i in range(11, 5,  -1):
             print(self.board[i], end="\t")
         print()
         print()
@@ -79,6 +79,37 @@ class AyoGame:
 
     def choose_best_pot(self):
         p = 0
+        opponent_score = {}
+        while self.board[p] == 0:
+            p += 1
+        m = [(0,p)]
+
+        # print("Start")
+        current_state = self.board.copy()
+        r = range(6) if self.first_player else range(6, 12)
+        for i in r:
+            self.last_hole = i
+            self.move()
+            v = self.value(self.last_hole)
+            last_hole = self.last_hole
+            opponent_score[i] = self.check_opponets_score()
+            self.last_hole = last_hole
+            self.board = current_state.copy()
+            if self.board[i]!=0:
+               m.append((v,i))
+
+            # if v>m[0]:
+            #     m = (v,i)
+            #     print("(v,i)",m)
+        r = range(6) if self.first_player else range(6, 12)
+
+        self.last_hole = max([(v-opponent_score[x][0],x) for (v,x) in m if self.board[x] != 0])[1]
+        # print("End",self.last_hole,current_state)
+        # self.display()
+
+    def check_opponets_score(self):
+        self.next_player()
+        p = 0
         while self.board[p] == 0:
             p += 1
         m = [(0,p)]
@@ -96,11 +127,8 @@ class AyoGame:
             # if v>m[0]:
             #     m = (v,i)
             #     print("(v,i)",m)
-
-        self.last_hole = max(m)[1]
-        # print("End",self.last_hole,current_state)
-        # self.display()
-
+        self.next_player()
+        return max(m)
     def value(self,x):
 
         player1 = 0
@@ -260,9 +288,10 @@ def game_loop(choose_all_randomly):
 
 
 def main():
-    for i in range(1000):
-        game_loop(True)
-    # game_loop(False)
+    print("Start")
+    # for i in range(1000):
+    #     game_loop(True)
+    game_loop(False)
 
 if __name__ == '__main__':
     main()
