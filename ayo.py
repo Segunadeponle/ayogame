@@ -288,10 +288,10 @@ def game_loop(choose_all_randomly):
 
 
 def main():
-    print("Start")
-    # for i in range(1000):
-    #     game_loop(True)
-    game_loop(False)
+    #print("Start")
+    for i in range(1000):
+        game_loop(False)
+    #game_loop(False)
 
 if __name__ == '__main__':
     main()
