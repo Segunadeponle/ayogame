@@ -26,12 +26,6 @@ class AyoTestCase(unittest.TestCase):
             self.ayo.gain()
             # self.ayo.display()
             if self.ayo.goal_state():
-                print("==============================================")
-                print("Player 1 =", self.ayo.player1, " Player 2 =", self.ayo.player2)
-                print("==============================================")
-                print("Player ", self.ayo.goal_state(), " Wins")
-                print()
-                print()
                 self.assertEqual(self.ayo.player1,26)
                 self.assertEqual(self.ayo.player2,0)
                 self.assertEqual(self.ayo.goal_state(),1)
@@ -39,5 +33,8 @@ class AyoTestCase(unittest.TestCase):
 
             self.ayo.next_player()
 
+
+    def test_board_size(self):
+        self.assertEqual(len(self.ayo.board),12)
     def tearDown(self):
         pass

@@ -77,7 +77,7 @@ class AyoGame:
                 self.last_hole = random.randrange(6, 12)
                 # print("Player 2 choose ",self.last_hole)
 
-        
+
 
     def choose_best_pot(self):
         p = 0
