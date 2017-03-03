@@ -77,6 +77,8 @@ class AyoGame:
                 self.last_hole = random.randrange(6, 12)
                 # print("Player 2 choose ",self.last_hole)
 
+        
+
     def choose_best_pot(self):
         p = 0
         opponent_score = {}
@@ -104,7 +106,7 @@ class AyoGame:
         r = range(6) if self.first_player else range(6, 12)
 
         self.last_hole = max([(v-opponent_score[x][0],x) for (v,x) in m if self.board[x] != 0])[1]
-        # print("End",self.last_hole,current_state)
+
         # self.display()
 
     def check_opponets_score(self):
@@ -254,44 +256,3 @@ class AyoGame:
             return (0,)
 
 
-def game_loop(choose_all_randomly):
-    ayo = AyoGame()
-    # ayo.display()
-    while True:
-        if choose_all_randomly:
-            ayo.choose_random()
-        else:
-            if ayo.first_player:
-                ayo.choose_best_pot()
-            else:
-                ayo.choose_random()
-
-        if ayo.invalid:
-            print("That is an invalid input.")
-            print()
-            continue
-        if ayo.is_chosen_hole_empty():
-            continue
-        ayo.move()
-        ayo.gain()
-        # ayo.display()
-        if ayo.goal_state():
-            print("==============================================")
-            print("Player 1 =", ayo.player1, " Player 2 =", ayo.player2)
-            print("==============================================")
-            print("Player ", ayo.goal_state(), " Wins")
-            print()
-            print()
-            break
-
-        ayo.next_player()
-
-
-def main():
-    #print("Start")
-    for i in range(1000):
-        game_loop(False)
-    #game_loop(False)
-
-if __name__ == '__main__':
-    main()
